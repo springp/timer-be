@@ -1,0 +1,17 @@
+version: '2'
+services:
+    timerbe-mongodb:
+        container_name: timerbe-mongodb
+        image: mongo:3.2.10
+        ports:
+            - "27017:27017"
+        command: mongos --configdb timerbe-mongodb-config
+    timerbe-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    timerbe-mongodb-config:
+        image: mongo:3.2.10
+        container_name: timerbe-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
